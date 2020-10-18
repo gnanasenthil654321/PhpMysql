@@ -1,0 +1,96 @@
+ <?php
+
+$servername = "********************************************************";
+$username = "********************************************************";
+$password = "********************************************************";
+$dbname = "********************************************************";
+
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Check connection
+if (mysqli_connect_error()) {
+  die("Connection failed: " . mysqli_connect_error());
+  exit();
+}
+
+$patient_name = $_POST["patient_name"];
+$age = $_POST["age"];
+$age_in = $_POST["age_in"];
+$gender = $_POST["gender"];
+$contact_number = $_POST["contact_number"];
+$srf_id = $_POST["srf_id"];
+$sample_cdate = $_POST["sample_cdate"];
+$sample_rdate = $_POST["sample_rdate"];
+$sample_type = $_POST["sample_type"];
+$sample_tdate = $_POST["sample_tdate"];
+$final_result_of_sample = $_POST["final_result_of_sample"];
+$record_id = $_POST["record_id"];
+$hash = $_POST["hash"];
+
+
+//variables for updating in otherDetails table
+
+//patient_id varchar(10) not null,
+$patient_id = $_POST["patient_id"];
+//address varchar(200),
+$address = $_POST["address"];
+//district varchar(50),
+$district = $_POST["district"];
+//date_of_arrival_in_india varchar(12),
+$date_of_arrival_in_india = $_POST["date_of_arrival_in_india"];
+//hospital_name varchar(50),
+$hospital_name = $_POST["hospital_name"];
+//patient_category varchar(10) not null,
+$patient_category = $_POST["patient_category"];
+//ct_value_orf1b varchar(6),
+$ct_value_orf1b = $_POST["ct_value_orf1b"];
+//ct_value_rdrp varchar(6),
+$ct_value_rdrp = $_POST["ct_value_rdrp"];
+//ct_value_screening
+$ct_value_screening = $_POST["ct_value_screening"];
+//entryDate
+$entryDate = $_POST["entryDate"];
+
+ $isThereARecord = "select srf_id from ******** where srf_id='$srf_id'";
+ //if the record is not there
+ $result1 = mysqli_query($conn,$isThereARecord);
+ $noOfrows = mysqli_num_rows($result1);
+
+ 	if (!$result1) {
+    		die('Invalid query: ' . mysqli_error($conn));
+	}
+	else{
+ 		//print_r($noOfrows);
+		mysqli_free_result($result1);
+	}
+
+ if($noOfrows == 0){
+ //then insert into the database
+ 	$insertRecord = "insert into ******(name,age,age_in,gender,mobile_number,srf_id,sample_cdate,sample_rdate,sample_type,sample_tdate,result,hash,address,district,date_of_arrival_in_india,hospital_name,patient_category,ct_value_orf1b,ct_value_rdrp,entryDate,patient_id,ct_value_screening,record_id) values ('$patient_name','$age','$age_in','$gender','$contact_number', '$srf_id','$sample_cdate','$sample_rdate','$sample_type','$sample_tdate','$final_result_of_sample','$hash','$address','$district','$date_of_arrival_in_india','$hospital_name','$patient_category','$ct_value_orf1b','$ct_value_rdrp','$entryDate','$patient_id','$ct_value_screening','$record_id')";
+
+ 	$insertOperation = mysqli_query($conn,$insertRecord);
+ 	if (!$insertOperation) {
+    		die('Invalid query: ' . mysqli_error($conn));
+	}
+	else{
+ 		echo "Inserted Rows";
+	}
+
+	$insertRecordToOtherDetails = "insert into *********************(srf_id,address,district,date_of_arrival_in_india,hospital_name,patient_category,ct_value_orf1b,ct_value_rdrp,entryDate,patient_id,ct_value_screening,record_id) values ('$srf_id','$address','$district','$date_of_arrival_in_india','$hospital_name','$patient_category','$ct_value_orf1b','$ct_value_rdrp','$entryDate','$patient_id','$ct_value_screening','$record_id')";
+	$insertIntoOtherDetailsOperation = mysqli_query($conn,$insertRecordToOtherDetails);
+
+ 	if (!$insertIntoOtherDetailsOperation) {
+    		die('Invalid query: ' . mysqli_error($conn));
+	}
+	else{
+ 		echo "Inserted Rows";
+	}
+
+ }
+ else {
+	 echo "1";
+ }
+ //else update the srf_id  
+mysqli_close($conn);
+?>
